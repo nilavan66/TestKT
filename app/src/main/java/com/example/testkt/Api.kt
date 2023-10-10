@@ -2,6 +2,7 @@ package com.example.testkt
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Exception
 
 class Api : AppCompatActivity() {
 
@@ -43,11 +45,15 @@ class Api : AppCompatActivity() {
             .baseUrl("https://reqres.in/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+            .create(ApiService::class.java)
 
-        val apiService = retrofit.create(ApiService::class.java)
-        val call = apiService.getUsers()
+        //val apiService = retrofit.create(ApiService::class.java)
+        //val call = apiService.getUsers()
 
-        call.enqueue(object :Callback<UserResponse>{
+        val retrofit_data = retrofit.getUsers()
+
+        /*
+        retrofit_data.enqueue(object :Callback<UserResponse>{
 
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 if (response.isSuccessful){
@@ -62,7 +68,30 @@ class Api : AppCompatActivity() {
             }
         })
 
+*/
 
+        try {
+            val response = retrofit_data.execute()
+            if (response.isSuccessful) {
+                val responseBody = response.body()
+                if (responseBody != null) {
+                    // Print the response body to the console for debugging
+                    println("Response Body: $responseBody")
+                    val users = responseBody.data
+                    userAdapter = UserAdapter(users)
+                    recyclerView.adapter = userAdapter
+                } else {
+                    // Handle the case where the response body is null
+                }
+            } else {
+                // Handle the error here
+                // You can access the error code and message from response.errorBody() if needed.
+            }
+        }
+            catch (e:Exception){
+            Log.e("error", "fetchData: $e")
+            Toast.makeText(applicationContext, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
 
 
     }
