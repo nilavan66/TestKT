@@ -8,9 +8,10 @@ import retrofit2.http.GET
 
 interface ApiService {
     @GET("users")
-    fun getUsers(): Call<UserResponse>
+    //fun getUsers(): Call<UserResponse>
+    suspend fun getUsers(): UserResponse
 }
 
 data class UserResponse (
-    val data :List<User>
+    val data :List<User>?
 )

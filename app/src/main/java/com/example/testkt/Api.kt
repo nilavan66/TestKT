@@ -9,6 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.testkt.api.ApiService
 import com.example.testkt.api.UserResponse
 import com.example.testkt.user.UserAdapter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -50,7 +54,7 @@ class Api : AppCompatActivity() {
         //val apiService = retrofit.create(ApiService::class.java)
         //val call = apiService.getUsers()
 
-        val retrofit_data = retrofit.getUsers()
+        //val retrofit_data = retrofit.getUsers()
 
         /*
         retrofit_data.enqueue(object :Callback<UserResponse>{
@@ -69,6 +73,7 @@ class Api : AppCompatActivity() {
         })
 
 */
+        /*
 
         try {
             val response = retrofit_data.execute()
@@ -77,11 +82,11 @@ class Api : AppCompatActivity() {
                 if (responseBody != null) {
                     // Print the response body to the console for debugging
                     println("Response Body: $responseBody")
-                    val users = responseBody.data
+                    val users = responseBody.data ?: emptyList()
                     userAdapter = UserAdapter(users)
                     recyclerView.adapter = userAdapter
                 } else {
-                    // Handle the case where the response body is null
+                    Log.e("response", "fetchData: null", )
                 }
             } else {
                 // Handle the error here
@@ -89,10 +94,30 @@ class Api : AppCompatActivity() {
             }
         }
             catch (e:Exception){
-            Log.e("error", "fetchData: $e")
+            Log.e("exception", "fetchData: ${e}")
             Toast.makeText(applicationContext, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
         }
+*/
 
 
+        // CoroutineScope
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val userResponse = retrofit.getUsers()
+                val users = userResponse.data ?: emptyList()
+                //update UI components
+                withContext(Dispatchers.Main) {
+                    userAdapter = UserAdapter(users)
+                    recyclerView.adapter = userAdapter
+                }
+            } catch (e: Exception) {
+                // Handle exceptions here
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(applicationContext, "Error: ${e.message}", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+        }
     }
 }
