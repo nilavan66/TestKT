@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testkt.api.CoroutineModelClass
+import com.example.testkt.api.RetrofitInt
 import com.example.testkt.api.RetrofitInterface
 import com.example.testkt.user.UserAdapter
 import kotlinx.coroutines.CoroutineScope
@@ -28,12 +29,19 @@ class Api : AppCompatActivity() {
         setContentView(R.layout.activity_api)
 
         userAdapter = UserAdapter(emptyList())
-        coroutineModel = ViewModelProvider(this)[CoroutineModelClass::class.java]
+
+        val apiService = RetrofitInt.getInstance().retrofit
+
+        coroutineModel = CoroutineModelClass(apiService)
+        //coroutineModel = ViewModelProvider(this)[CoroutineModelClass::class.java]
         recyclerView = findViewById(R.id.userList)
 
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        fetchData()
+
+
+        coroutineModel.fetchData()
+        //fetchData()
         coroutineModel.getUserAdapter().observe(this) { userAdapter ->
             recyclerView.adapter = userAdapter
         }
@@ -41,7 +49,7 @@ class Api : AppCompatActivity() {
 
     }
 
-    private fun fetchData() {
-        coroutineModel.fetchData()
-    }
+   /* private fun fetchData() {
+
+    }*/
 }
