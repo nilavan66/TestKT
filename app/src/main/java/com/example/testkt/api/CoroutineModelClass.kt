@@ -9,13 +9,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CoroutineModelClass (private val apiService: ApiService) : ViewModel() {
+class CoroutineModelClass (private val userRepository: UserRepository) : ViewModel() {
     private var userAdapter = MutableLiveData<UserAdapter>()
     fun fetchData() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                //val userResponse = RetrofitInterface.retrofit.getUsers()
-                val userResponse = apiService.getUsers()
+                val userResponse = userRepository.getUsers()
                 val users = userResponse.data ?: emptyList()
                 withContext(Dispatchers.Main) {
                     userAdapter.postValue(UserAdapter(users))

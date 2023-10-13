@@ -1,28 +1,19 @@
 package com.example.testkt
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testkt.api.CoroutineModelClass
 import com.example.testkt.api.RetrofitInt
-import com.example.testkt.api.RetrofitInterface
+import com.example.testkt.api.UserRepository
 import com.example.testkt.user.UserAdapter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.lang.Exception
 
 class Api : AppCompatActivity() {
-
 
     private lateinit var userAdapter: UserAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var coroutineModel: CoroutineModelClass
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,25 +22,17 @@ class Api : AppCompatActivity() {
         userAdapter = UserAdapter(emptyList())
 
         val apiService = RetrofitInt.getInstance().retrofit
-
-        coroutineModel = CoroutineModelClass(apiService)
-        //coroutineModel = ViewModelProvider(this)[CoroutineModelClass::class.java]
+        val userRepository = UserRepository(apiService)
+        coroutineModel = CoroutineModelClass(userRepository)
         recyclerView = findViewById(R.id.userList)
 
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-
         coroutineModel.fetchData()
-        //fetchData()
         coroutineModel.getUserAdapter().observe(this) { userAdapter ->
             recyclerView.adapter = userAdapter
         }
 
 
     }
-
-   /* private fun fetchData() {
-
-    }*/
 }
