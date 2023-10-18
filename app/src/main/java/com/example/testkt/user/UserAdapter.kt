@@ -10,8 +10,8 @@ import com.google.android.material.textview.MaterialTextView
 import com.squareup.picasso.Picasso
 
 
-class UserAdapter (private val userList: List<User>) :RecyclerView.Adapter<UserAdapter.ViewHolder>() {
-
+class UserAdapter(private val userList: List<User>) :
+    RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -19,7 +19,6 @@ class UserAdapter (private val userList: List<User>) :RecyclerView.Adapter<UserA
 
         return ViewHolder(view)
     }
-
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -30,6 +29,7 @@ class UserAdapter (private val userList: List<User>) :RecyclerView.Adapter<UserA
     override fun getItemCount(): Int {
         return userList.size
     }
+
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

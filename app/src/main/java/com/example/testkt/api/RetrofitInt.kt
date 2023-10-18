@@ -16,7 +16,9 @@ class RetrofitInt private constructor() {
 
         fun getInstance(): RetrofitInt {
             return instance ?: synchronized(this) {
-                instance ?: RetrofitInt().also { instance = it }
+                instance ?: RetrofitInt().also {
+                    instance = it
+                }
             }
         }
     }

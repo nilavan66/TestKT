@@ -1,24 +1,35 @@
 package com.example.testkt.api
 
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testkt.user.UserAdapter
+import com.example.testkt.user.User
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CoroutineModelClass (private val userRepository: UserRepository) : ViewModel() {
-    private var userAdapter = MutableLiveData<UserAdapter>()
+class CoroutineModelClass: ViewModel() {
+    private lateinit var  userRepository: UserRepository
+    private var usersLiveData = MutableLiveData<List<User>>()
+
+fun init(){
+    val apiService = RetrofitInt.getInstance().retrofit
+    userRepository = UserRepository(apiService)
+}
     fun fetchData() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+
                 val userResponse = userRepository.getUsers()
                 val users = userResponse.data ?: emptyList()
+
                 withContext(Dispatchers.Main) {
-                    userAdapter.postValue(UserAdapter(users))
+                    usersLiveData.value = users
                 }
+
             } catch (e: Exception) {
                 // Handle exceptions here
                 //Toast.makeText(applicationContext, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -26,5 +37,5 @@ class CoroutineModelClass (private val userRepository: UserRepository) : ViewMod
         }
     }
 
-    fun getUserAdapter() = userAdapter
+    fun getUsersLiveData(): LiveData<List<User>> = usersLiveData
 }
