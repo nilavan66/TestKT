@@ -10,7 +10,7 @@ import com.google.android.material.textview.MaterialTextView
 import com.squareup.picasso.Picasso
 
 
-class UserAdapter(private val userList: List<User>) :
+class UserAdapter(private var userList: List<User>) :
     RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
 
@@ -30,6 +30,11 @@ class UserAdapter(private val userList: List<User>) :
         return userList.size
     }
 
+
+    fun updateData(newData: List<User>) {
+        userList = newData
+        notifyDataSetChanged()
+    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

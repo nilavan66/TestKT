@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testkt.api.CoroutineModelClass
-import com.example.testkt.user.User
 import com.example.testkt.user.UserAdapter
 
 class Api : AppCompatActivity() {
@@ -24,31 +23,29 @@ class Api : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.userList)
 
-        intViewModel()
-
-        /*recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
         recyclerView.adapter = userAdapter
 
+        intViewModel()
+
+
+    }
+
+    private fun intViewModel() {
         val viewModel = ViewModelProvider(this)[CoroutineModelClass::class.java]
         viewModel.fetchData()
         viewModel.getUsersLiveData().observe(this) { users ->
-            val updatedAdapter = UserAdapter(users)
-            recyclerView.adapter = updatedAdapter
-        }*/
+            //initAdapter(users)
+            userAdapter.updateData(users)
+        }
+    }
 
-    }
-private fun intViewModel(){
-    val viewModel = ViewModelProvider(this)[CoroutineModelClass::class.java]
-    viewModel.fetchData()
-    viewModel.getUsersLiveData().observe(this) { users ->
-        initAdapter(users)
-    }
-}
-    private fun initAdapter(data: List<User>){
+    /*
+    private fun initAdapter(data: List<User>) {
         recyclerView.layoutManager = LinearLayoutManager(this)
         val updatedAdapter = UserAdapter(data)
         recyclerView.adapter = updatedAdapter
-
     }
+    */
 }
